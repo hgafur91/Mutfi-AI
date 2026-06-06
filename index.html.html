@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>مفتي AI — علم الرجال</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet"/>
+<style>
+/* ── Variables ── */
+:root {
+  --ink:        #1a1209;
+  --parchment:  #f5f0e8;
+  --parchment2: #ede6d6;
+  --gold:       #c49a2a;
+  --gold-light: #e8c84a;
+  --teal:       #1d6b6b;
+  --teal-light: #2a9090;
+  --rust:       #8b3a1a;
+  --border:     #c8b898;
+  --shadow:     rgba(26,18,9,0.15);
+
+  /* Hukm colours */
+  --h-thiqa-thibt:  #2e7d32;
+  --h-thiqa:        #388e3c;
+  --h-saduq:        #f57c00;
+  --h-maqbul:       #ef8c00;
+  --h-layyin:       #e65100;
+  --h-daif:         #c62828;
+  --h-matruk:       #6a1010;
+  --h-unknown:      #888;
+}
+
+/* ── Reset ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Tajawal', sans-serif;
+  background: var(--parchment);
+  color: var(--ink);
+  min-height: 100vh;
+  direction: rtl;
+  overflow-x: hidden;
+}
+
+/* ── Background texture ── */
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: 0;
+  background-image:
+    radial-gradient(ellipse at 20% 10%, rgba(196,154,42,0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 90%, rgba(29,107,107,0.07) 0%, transparent 50%),
+    url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23c49a2a' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  pointer-events: none;
+}
+
+/* ── Header ── */
+header {
+  position: relative; z-index: 10;
+  background: var(--ink);
+  padding: 0;
+  border-bottom: 3px solid var(--gold);
+}
+
+.header-inner {
+  max-width: 1200px; margin: 0 auto;
+  padding: 28px 40px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+
+.logo {
+  display: flex; flex-direction: column; align-items: flex-end;
+  gap: 4px;
+}
+
+.logo-ar {
+  font-family: 'Amiri', serif;
+  font-size: 2.4rem; font-weight: 700;
+  color: var(--gold);
+  letter-spacing: 0.02em;
+  line-height: 1;
+}
+
+.logo-en {
+  font-size: 0.75rem; font-weight: 300;
+  color: rgba(255,255,255,0.45);
+  letter-spacing: 0.25em; text-transform: uppercase;
+}
+
+.header-badge {
+  background: rgba(196,154,42,0.15);
+  border: 1px solid rgba(196,154,42,0.3);
+  border-radius: 8px;
+  padding: 8px 16px;
+  text-align: center;
+}
+
+.header-badge .count { font-size: 1.5rem; font-weight: 700; color: var(--gold); }
+.header-badge .label { font-size: 0.7rem; color: rgba(255,255,255,0.5); }
+
+/* ── Ornament ── */
+.ornament {
+  text-align: center;
+  font-family: 'Amiri', serif;
+  font-size: 1.4rem; color: var(--gold);
+  opacity: 0.6;
+  letter-spacing: 0.5em;
+  padding: 6px 0;
+  background: var(--ink);
+}
+
+/* ── Main layout ── */
+main {
+  position: relative; z-index: 1;
+  max-width: 1200px; margin: 0 auto;
+  padding: 40px 24px 80px;
+}
+
+/* ── Mode tabs ── */
+.mode-tabs {
+  display: flex; gap: 0;
+  background: var(--ink);
+  border-radius: 14px;
+  padding: 6px;
+  margin-bottom: 36px;
+  box-shadow: 0 4px 24px var(--shadow);
+}
+
+.mode-tab {
+  flex: 1; padding: 14px 20px;
+  background: transparent; border: none;
+  color: rgba(255,255,255,0.5);
+  font-family: 'Tajawal', sans-serif;
+  font-size: 1rem; font-weight: 500;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.25s;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+
+.mode-tab.active {
+  background: var(--gold);
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.mode-tab:not(.active):hover { color: rgba(255,255,255,0.8); }
+
+.tab-icon { font-size: 1.2rem; }
+
+/* ── Search panel ── */
+.panel { display: none; }
+.panel.active { display: block; animation: fadeIn 0.3s ease; }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ── Search box ── */
+.search-wrap {
+  position: relative;
+  background: white;
+  border: 2px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 2px 20px var(--shadow);
+  margin-bottom: 20px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.search-wrap:focus-within {
+  border-color: var(--gold);
+  box-shadow: 0 2px 28px rgba(196,154,42,0.2);
+}
+
+.search-input {
+  width: 100%; padding: 20px 24px;
+  border: none; outline: none;
+  font-family: 'Amiri', serif;
+  font-size: 1.25rem;
+  background: transparent; color: var(--ink);
+  direction: rtl;
+}
+
+.search-input::placeholder { color: #aaa; }
+
+.search-btn {
+  position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+  background: var(--teal);
+  color: white; border: none;
+  padding: 10px 22px; border-radius: 10px;
+  font-family: 'Tajawal', sans-serif;
+  font-size: 0.95rem; font-weight: 600;
+  cursor: pointer; transition: background 0.2s;
+  display: flex; align-items: center; gap: 6px;
+}
+
+.search-btn:hover { background: var(--teal-light); }
+.search-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ── Sanad input ── */
+.sanad-wrap {
+  background: white;
+  border: 2px solid var(--border);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 2px 20px var(--shadow);
+  margin-bottom: 20px;
+}
+
+.sanad-label {
+  font-family: 'Amiri', serif;
+  font-size: 1rem; color: var(--teal);
+  margin-bottom: 10px; display: block;
+}
+
+.sanad-chain {
+  display: flex; flex-direction: column; gap: 10px;
+  margin-bottom: 16px;
+}
+
+.sanad-row {
+  display: flex; align-items: center; gap: 8px;
+}
+
+.sanad-num {
+  width: 28px; height: 28px;
+  background: var(--teal); color: white;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.8rem; font-weight: 700;
+  flex-shrink: 0;
+}
+
+.sanad-input {
+  flex: 1; padding: 10px 14px;
+  border: 1.5px solid var(--border); border-radius: 10px;
+  font-family: 'Amiri', serif; font-size: 1rem;
+  direction: rtl; outline: none;
+  transition: border-color 0.2s;
+}
+
+.sanad-input:focus { border-color: var(--gold); }
+.sanad-input::placeholder { color: #bbb; }
+
+.arrow-down {
+  text-align: center; color: var(--gold);
+  font-size: 1.2rem; line-height: 1;
+}
+
+.sanad-actions {
+  display: flex; gap: 10px; align-items: center;
+}
+
+.btn-add {
+  background: var(--parchment2);
+  border: 1.5px solid var(--border);
+  color: var(--ink); border-radius: 8px;
+  padding: 8px 16px;
+  font-family: 'Tajawal', sans-serif; font-size: 0.9rem;
+  cursor: pointer; transition: all 0.2s;
+}
+
+.btn-add:hover { background: var(--border); }
+
+.btn-verify {
+  background: var(--teal); color: white;
+  border: none; border-radius: 10px;
+  padding: 12px 28px;
+  font-family: 'Tajawal', sans-serif; font-size: 1rem; font-weight: 600;
+  cursor: pointer; transition: background 0.2s;
+  display: flex; align-items: center; gap: 6px;
+}
+
+.btn-verify:hover { background: var(--teal-light); }
+.btn-verify:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ── Loading ── */
+.loading {
+  display: none;
+  text-align: center; padding: 60px 20px;
+}
+
+.loading.show { display: block; }
+
+.spinner {
+  width: 50px; height: 50px; margin: 0 auto 16px;
+  border: 3px solid var(--border);
+  border-top-color: var(--gold);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.loading-text {
+  font-family: 'Amiri', serif;
+  font-size: 1.1rem; color: var(--teal);
+}
+
+/* ── Results ── */
+.results { margin-top: 32px; }
+
+/* Narrator card */
+.narrator-card {
+  background: white;
+  border: 1.5px solid var(--border);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 4px 32px var(--shadow);
+  margin-bottom: 32px;
+  animation: fadeIn 0.4s ease;
+}
+
+.card-header {
+  background: var(--ink);
+  padding: 20px 28px;
+  display: flex; align-items: flex-start; justify-content: space-between;
+  gap: 16px;
+}
+
+.narrator-name {
+  font-family: 'Amiri', serif;
+  font-size: 1.35rem; font-weight: 700;
+  color: var(--gold); line-height: 1.4;
+}
+
+.narrator-meta {
+  font-size: 0.8rem; color: rgba(255,255,255,0.5);
+  margin-top: 4px;
+}
+
+.similarity-badge {
+  background: rgba(196,154,42,0.2);
+  border: 1px solid rgba(196,154,42,0.4);
+  color: var(--gold-light);
+  font-size: 0.75rem; font-weight: 700;
+  padding: 4px 10px; border-radius: 20px;
+  white-space: nowrap; flex-shrink: 0;
+}
+
+/* Hukm grid */
+.hukm-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1px;
+  background: var(--border);
+  border-top: 1px solid var(--border);
+}
+
+.hukm-cell {
+  background: white;
+  padding: 14px 18px;
+  display: flex; flex-direction: column; align-items: flex-end;
+  gap: 4px;
+}
+
+.hukm-imam {
+  font-size: 0.72rem; font-weight: 700;
+  color: var(--teal); letter-spacing: 0.02em;
+}
+
+.hukm-val {
+  font-family: 'Amiri', serif;
+  font-size: 1rem; font-weight: 700;
+  padding: 3px 10px; border-radius: 20px;
+  display: inline-block;
+}
+
+.hukm-val.thiqa-thibt  { background: #d6ead6; color: #1b5e20; }
+.hukm-val.thiqa        { background: #e8f5e9; color: #2e7d32; }
+.hukm-val.saduq        { background: #fff9c4; color: #f57f17; }
+.hukm-val.maqbul       { background: #ffe0b2; color: #bf360c; }
+.hukm-val.layyin       { background: #ffccbc; color: #bf360c; }
+.hukm-val.daif         { background: #ffcdd2; color: #b71c1c; }
+.hukm-val.matruk       { background: #ef9a9a; color: #7f0000; }
+.hukm-val.unknown      { background: #f5f5f5; color: #999; font-style: italic; }
+
+/* Books row */
+.books-row {
+  padding: 12px 18px;
+  border-top: 1px solid var(--parchment2);
+  display: flex; flex-wrap: wrap; gap: 6px; align-items: center;
+  justify-content: flex-end;
+}
+
+.books-label { font-size: 0.75rem; color: #888; margin-left: 4px; }
+
+.book-badge {
+  background: var(--teal);
+  color: white; font-size: 0.7rem; font-weight: 700;
+  padding: 2px 8px; border-radius: 12px;
+}
+
+/* AI Analysis panel */
+.analysis-section {
+  border-top: 1px solid var(--parchment2);
+  padding: 24px 28px;
+}
+
+.analysis-title {
+  font-family: 'Amiri', serif;
+  font-size: 1.1rem; color: var(--teal);
+  margin-bottom: 14px;
+  display: flex; align-items: center; gap: 8px;
+}
+
+.analysis-title::before { content: '✦'; color: var(--gold); }
+
+.analysis-body {
+  font-family: 'Tajawal', sans-serif;
+  font-size: 0.95rem; line-height: 1.9;
+  color: var(--ink);
+  white-space: pre-wrap;
+}
+
+/* Markdown rendering in analysis */
+.analysis-body h2, .analysis-body h3 {
+  font-family: 'Amiri', serif;
+  color: var(--teal); margin: 16px 0 8px;
+}
+
+.analysis-body table {
+  width: 100%; border-collapse: collapse;
+  margin: 12px 0; font-size: 0.9rem;
+}
+
+.analysis-body th {
+  background: var(--parchment2);
+  padding: 8px 12px; text-align: right;
+  border: 1px solid var(--border);
+  font-weight: 700;
+}
+
+.analysis-body td {
+  padding: 8px 12px; border: 1px solid var(--border);
+  text-align: right;
+}
+
+.analysis-body strong { color: var(--teal); font-weight: 700; }
+
+/* Ittisal results */
+.sanad-result {
+  background: white;
+  border: 1.5px solid var(--border);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 4px 32px var(--shadow);
+  animation: fadeIn 0.4s ease;
+}
+
+.sanad-verdict {
+  padding: 20px 28px;
+  text-align: center;
+}
+
+.verdict-icon { font-size: 2.5rem; margin-bottom: 8px; }
+.verdict-text {
+  font-family: 'Amiri', serif;
+  font-size: 1.6rem; font-weight: 700;
+  margin-bottom: 4px;
+}
+.verdict-sub { font-size: 0.9rem; color: #666; }
+
+.verdict-muttasil { background: #e8f5e9; }
+.verdict-muttasil .verdict-text { color: #2e7d32; }
+
+.verdict-munqati { background: #ffebee; }
+.verdict-munqati .verdict-text { color: #c62828; }
+
+.verdict-muhtamal { background: #fff8e1; }
+.verdict-muhtamal .verdict-text { color: #f57f17; }
+
+/* Chain links */
+.chain-links {
+  padding: 20px 28px;
+  border-top: 1px solid var(--parchment2);
+}
+
+.chain-link {
+  display: flex; align-items: flex-start; gap: 14px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--parchment2);
+}
+
+.chain-link:last-child { border-bottom: none; }
+
+.link-icon { font-size: 1.4rem; flex-shrink: 0; margin-top: 2px; }
+
+.link-content { flex: 1; }
+
+.link-narrators {
+  font-family: 'Amiri', serif;
+  font-size: 1.05rem; color: var(--ink);
+  margin-bottom: 6px;
+}
+
+.link-level {
+  display: inline-block;
+  font-size: 0.8rem; font-weight: 700;
+  padding: 2px 10px; border-radius: 12px;
+  margin-bottom: 6px;
+}
+
+.level-sama   { background: #d6ead6; color: #1b5e20; }
+.level-luqya  { background: #fff9c4; color: #f57f17; }
+.level-muasara { background: #e3f2fd; color: #0d47a1; }
+.level-inqita { background: #ffcdd2; color: #b71c1c; }
+.level-unknown { background: #f5f5f5; color: #888; }
+
+.link-evidence {
+  font-size: 0.85rem; color: #666;
+  line-height: 1.6;
+}
+
+/* AI sanad analysis */
+.sanad-analysis {
+  padding: 24px 28px;
+  border-top: 1px solid var(--parchment2);
+  font-size: 0.95rem; line-height: 1.9;
+  color: var(--ink);
+}
+
+/* Error */
+.error-box {
+  background: #fff3f3;
+  border: 1.5px solid #ffcdd2;
+  border-radius: 14px;
+  padding: 20px 24px;
+  text-align: center;
+  color: #c62828;
+  font-family: 'Amiri', serif;
+  font-size: 1.05rem;
+}
+
+/* Footer */
+footer {
+  position: relative; z-index: 1;
+  background: var(--ink);
+  text-align: center;
+  padding: 20px;
+  border-top: 2px solid var(--gold);
+  color: rgba(255,255,255,0.35);
+  font-size: 0.75rem;
+}
+
+footer span { color: var(--gold); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      <div class="logo-ar">مفتي AI</div>
+      <div class="logo-en">MUFTI AI · Rijal Science Engine</div>
+    </div>
+    <div class="header-badge">
+      <div class="count">8,828</div>
+      <div class="label">راوٍ موثق · 12 مصدراً</div>
+    </div>
+  </div>
+  <div class="ornament">❧ ✦ ❧</div>
+</header>
+
+<main>
+  <!-- Mode tabs -->
+  <div class="mode-tabs">
+    <button class="mode-tab active" onclick="switchMode('narrator')" id="tab-narrator">
+      <span class="tab-icon">🔍</span> بحث عن راوٍ
+    </button>
+    <button class="mode-tab" onclick="switchMode('sanad')" id="tab-sanad">
+      <span class="tab-icon">⛓</span> تحقق من السند
+    </button>
+  </div>
+
+  <!-- Panel: Narrator search -->
+  <div class="panel active" id="panel-narrator">
+    <div class="search-wrap">
+      <input class="search-input" id="narrator-input"
+             placeholder="اكتب اسم الراوي... مثال: سفيان الثوري"
+             onkeydown="if(event.key==='Enter') searchNarrator()"/>
+      <button class="search-btn" id="search-btn" onclick="searchNarrator()">
+        <span>بحث</span> ←
+      </button>
+    </div>
+
+    <div class="loading" id="narrator-loading">
+      <div class="spinner"></div>
+      <div class="loading-text">جارٍ البحث في قاعدة البيانات...</div>
+    </div>
+
+    <div class="results" id="narrator-results"></div>
+  </div>
+
+  <!-- Panel: Sanad verification -->
+  <div class="panel" id="panel-sanad">
+    <div class="sanad-wrap">
+      <label class="sanad-label">أدخل رجال السند من الأعلى إلى الأسفل:</label>
+      <div class="sanad-chain" id="sanad-chain">
+        <div class="sanad-row">
+          <div class="sanad-num">١</div>
+          <input class="sanad-input" placeholder="الراوي الأول (صاحب الكتاب أو المخرِّج)"/>
+        </div>
+        <div class="arrow-down">↓</div>
+        <div class="sanad-row">
+          <div class="sanad-num">٢</div>
+          <input class="sanad-input" placeholder="الراوي الثاني"/>
+        </div>
+        <div class="arrow-down">↓</div>
+        <div class="sanad-row">
+          <div class="sanad-num">٣</div>
+          <input class="sanad-input" placeholder="الراوي الثالث"/>
+        </div>
+      </div>
+      <div class="sanad-actions">
+        <button class="btn-add" onclick="addNarrator()">+ إضافة راوٍ</button>
+        <button class="btn-verify" id="verify-btn" onclick="verifySanad()">
+          ⛓ تحقق من الاتصال
+        </button>
+      </div>
+    </div>
+
+    <div class="loading" id="sanad-loading">
+      <div class="spinner"></div>
+      <div class="loading-text">جارٍ تحليل السند...</div>
+    </div>
+
+    <div class="results" id="sanad-results"></div>
+  </div>
+</main>
+
+<footer>
+  <p>مفتي AI · قاعدة بيانات رجال الحديث · <span>12 مصدراً أصلياً وثانوياً</span></p>
+  <p style="margin-top:4px">تقريب التهذيب · الكاشف · الجرح والتعديل · ابن معين · النسائي · أبو زرعة · الدارقطني · ابن المديني · الإمام أحمد</p>
+</footer>
+
+<script>
+// ── Config — REPLACE WITH YOUR VALUES ──────────────────────────────────────
+const SUPABASE_URL        = 'https://oijuvcybqkpyfhmoruxk.supabase.co';
+const SUPABASE_ANON_KEY   = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9panV2Y3licWtweWZobW9ydXhrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA3MDM4MDcsImV4cCI6MjA5NjI3OTgwN30.NzUWphMlrOERIjwY8aJuC5SKSfel4sQ4eS1dQhVKg9w';
+const ANTHROPIC_PROXY_URL = '';
+// Fill ANTHROPIC_PROXY_URL after Railway deployment
+// ────────────────────────────────────────────────────────────────────────────
+
+// Mode switch
+function switchMode(mode) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.mode-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('panel-' + mode).classList.add('active');
+  document.getElementById('tab-' + mode).classList.add('active');
+}
+
+// Add narrator row to sanad chain
+let narratorCount = 3;
+const ARABIC_NUMS = ['١','٢','٣','٤','٥','٦','٧','٨','٩','١٠'];
+
+function addNarrator() {
+  narratorCount++;
+  const chain = document.getElementById('sanad-chain');
+  const arrow = document.createElement('div');
+  arrow.className = 'arrow-down'; arrow.textContent = '↓';
+  const row = document.createElement('div');
+  row.className = 'sanad-row';
+  row.innerHTML = `
+    <div class="sanad-num">${ARABIC_NUMS[narratorCount-1] || narratorCount}</div>
+    <input class="sanad-input" placeholder="الراوي ${narratorCount}"/>
+  `;
+  chain.appendChild(arrow);
+  chain.appendChild(row);
+  row.querySelector('input').focus();
+}
+
+// ── Hukm classification ───────────────────────────────────────────────────
+function hukmClass(hukm) {
+  if (!hukm || hukm === 'غير وارد' || hukm === 'غير محدد' || hukm === 'غير وارد في الكاشف') return 'unknown';
+  if (hukm.includes('ثقة ثبت') || hukm.includes('ثقة حافظ') || hukm.includes('ثقة إمام')) return 'thiqa-thibt';
+  if (hukm.includes('ثقة')) return 'thiqa';
+  if (hukm.includes('صدوق') || hukm.includes('صالح') || hukm.includes('لا بأس')) return 'saduq';
+  if (hukm.includes('مقبول') || hukm.includes('صالح وسطا')) return 'maqbul';
+  if (hukm.includes('لين') || hukm.includes('ليس بالقوي') || hukm.includes('ليس بثقة')) return 'layyin';
+  if (hukm.includes('ضعيف') || hukm.includes('منكر') || hukm.includes('واه') || hukm.includes('ليس بشيء')) return 'daif';
+  if (hukm.includes('متروك') || hukm.includes('كذاب') || hukm.includes('وضاع') || hukm.includes('مذكور')) return 'matruk';
+  return 'unknown';
+}
+
+// ── Sources config ────────────────────────────────────────────────────────
+const SOURCES = [
+  { field: 'hukm',                 label: 'ابن حجر',        primary: true },
+  { field: 'hukm_dhahabi',         label: 'الذهبي' },
+  { field: 'hukm_ibn_abi_hatim',   label: 'ابن أبي حاتم' },
+  { field: 'hukm_ibn_maeen',       label: 'ابن معين' },
+  { field: 'hukm_nasai',           label: 'النسائي' },
+  { field: 'hukm_abu_zuraa',       label: 'أبو زرعة' },
+  { field: 'hukm_daraqutni',       label: 'الدارقطني' },
+  { field: 'hukm_ibn_madini',      label: 'ابن المديني' },
+  { field: 'hukm_ahmad_abi_dawud', label: 'الإمام أحمد' },
+];
+
+// ── Embed via backend ─────────────────────────────────────────────────────
+async function getEmbedding(text) {
+  const res = await fetch(`${ANTHROPIC_PROXY_URL}/embed`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ text })
+  });
+  const data = await res.json();
+  return data.embedding;
+}
+
+// ── Search Supabase ───────────────────────────────────────────────────────
+async function searchSupabase(embedding, topK=5) {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/match_rijal`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'apikey': SUPABASE_ANON_KEY,
+      'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+    },
+    body: JSON.stringify({ query_embedding: embedding, match_count: topK })
+  });
+  return res.json();
+}
+
+// ── Get Claude analysis ───────────────────────────────────────────────────
+async function getAnalysis(question, context) {
+  const res = await fetch(`${ANTHROPIC_PROXY_URL}/analyze`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ question, context })
+  });
+  const data = await res.json();
+  return data.answer;
+}
+
+// ── Render narrator card ──────────────────────────────────────────────────
+function renderNarrator(n, analysis, index) {
+  const hukmCells = SOURCES.map(s => {
+    const val = n[s.field];
+    const display = (!val || val === 'غير وارد' || val === 'غير محدد' || val === 'غير وارد في الكاشف') ? '—' : val;
+    const cls = display !== '—' ? hukmClass(val) : 'unknown';
+    return `
+      <div class="hukm-cell">
+        <div class="hukm-imam">${s.label}</div>
+        <div class="hukm-val ${cls}">${display}</div>
+      </div>`;
+  }).join('');
+
+  const books = (n.books_expanded || []).slice(0, 6)
+    .map(b => `<span class="book-badge">${b}</span>`).join('');
+
+  const analysisHtml = index === 0 && analysis
+    ? `<div class="analysis-section">
+         <div class="analysis-title">التحليل العلمي</div>
+         <div class="analysis-body">${renderMarkdown(analysis)}</div>
+       </div>` : '';
+
+  return `
+    <div class="narrator-card">
+      <div class="card-header">
+        <div>
+          <div class="narrator-name">${n.full_text ? n.full_text.slice(0,100) : 'غير معروف'}</div>
+          <div class="narrator-meta">${n.tabaqah || ''} ${n.death_year ? '· وفاته: ' + n.death_year : ''}</div>
+        </div>
+        <div class="similarity-badge">${(n.similarity * 100).toFixed(0)}% تطابق</div>
+      </div>
+      <div class="hukm-grid">${hukmCells}</div>
+      ${books ? `<div class="books-row"><span class="books-label">روى له:</span>${books}</div>` : ''}
+      ${analysisHtml}
+    </div>`;
+}
+
+// Simple markdown renderer
+function renderMarkdown(text) {
+  return text
+    .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+    .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\|(.+)\|/g, (m) => {
+      const cells = m.split('|').filter(c => c.trim() && !c.match(/^[\s\-:]+$/));
+      return '<tr>' + cells.map(c => `<td>${c.trim()}</td>`).join('') + '</tr>';
+    })
+    .replace(/(<tr>.+<\/tr>\n?)+/g, m => `<table>${m}</table>`)
+    .replace(/^- (.+)$/gm, '<li>$1</li>')
+    .replace(/(<li>.+<\/li>\n?)+/g, m => `<ul>${m}</ul>`)
+    .replace(/\n\n/g, '</p><p>')
+    .replace(/^(?!<[hultd])(.+)$/gm, '$1');
+}
+
+// ── SEARCH NARRATOR ───────────────────────────────────────────────────────
+async function searchNarrator() {
+  const query = document.getElementById('narrator-input').value.trim();
+  if (!query) return;
+
+  const btn = document.getElementById('search-btn');
+  const loading = document.getElementById('narrator-loading');
+  const results = document.getElementById('narrator-results');
+
+  btn.disabled = true;
+  loading.classList.add('show');
+  results.innerHTML = '';
+
+  try {
+    const embedding = await getEmbedding(query);
+    const narrators = await searchSupabase(embedding, 5);
+
+    if (!narrators || !narrators.length) {
+      results.innerHTML = '<div class="error-box">لم يُعثر على رواة مطابقين</div>';
+      return;
+    }
+
+    const analysis = await getAnalysis(
+      `ما حال الراوي: ${query}`,
+      narrators.map((n,i) => `[${i+1}] ${n.full_text}\nحكم ابن حجر: ${n.hukm}\nحكم الذهبي: ${n.hukm_dhahabi}\nحكم ابن أبي حاتم: ${n.hukm_ibn_abi_hatim}\nحكم ابن معين: ${n.hukm_ibn_maeen}\nحكم النسائي: ${n.hukm_nasai}`).join('\n\n---\n\n')
+    );
+
+    results.innerHTML = narrators.map((n, i) => renderNarrator(n, i === 0 ? analysis : null, i)).join('');
+
+  } catch(err) {
+    results.innerHTML = `<div class="error-box">خطأ: ${err.message}</div>`;
+  } finally {
+    btn.disabled = false;
+    loading.classList.remove('show');
+  }
+}
+
+// ── VERIFY SANAD ──────────────────────────────────────────────────────────
+async function verifySanad() {
+  const inputs = document.querySelectorAll('#sanad-chain .sanad-input');
+  const names = Array.from(inputs).map(i => i.value.trim()).filter(Boolean);
+
+  if (names.length < 2) {
+    alert('أدخل راويين على الأقل');
+    return;
+  }
+
+  const btn = document.getElementById('verify-btn');
+  const loading = document.getElementById('sanad-loading');
+  const results = document.getElementById('sanad-results');
+
+  btn.disabled = true;
+  loading.classList.add('show');
+  results.innerHTML = '';
+
+  try {
+    const res = await fetch(`${ANTHROPIC_PROXY_URL}/sanad`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ narrators: names })
+    });
+    const data = await res.json();
+
+    results.innerHTML = renderSanadResult(data, names);
+  } catch(err) {
+    results.innerHTML = `<div class="error-box">خطأ: ${err.message}</div>`;
+  } finally {
+    btn.disabled = false;
+    loading.classList.remove('show');
+  }
+}
+
+function ittisalIcon(level) {
+  const ar = level?.ar || '';
+  if (ar === 'سماع') return '✅';
+  if (ar === 'لقيا') return '🔶';
+  if (ar.includes('معاصرة')) return '🔷';
+  if (ar.includes('انقطاع')) return '❌';
+  return '❓';
+}
+
+function ittisalClass(level) {
+  const ar = level?.ar || '';
+  if (ar === 'سماع') return 'level-sama';
+  if (ar === 'لقيا') return 'level-luqya';
+  if (ar.includes('معاصرة')) return 'level-muasara';
+  if (ar.includes('انقطاع')) return 'level-inqita';
+  return 'level-unknown';
+}
+
+function verdictClass(verdict) {
+  if (verdict === 'متصل') return 'verdict-muttasil';
+  if (verdict === 'منقطع') return 'verdict-munqati';
+  return 'verdict-muhtamal';
+}
+
+function verdictIcon(verdict) {
+  if (verdict === 'متصل') return '✅';
+  if (verdict === 'منقطع') return '❌';
+  return '⚠️';
+}
+
+function renderSanadResult(data, names) {
+  const vc = verdictClass(data.overall_verdict);
+  const vi = verdictIcon(data.overall_verdict);
+
+  const linksHtml = (data.links || []).map(link => `
+    <div class="chain-link">
+      <div class="link-icon">${ittisalIcon(link.level)}</div>
+      <div class="link-content">
+        <div class="link-narrators">${link.from} ← ${link.to}</div>
+        <span class="link-level ${ittisalClass(link.level)}">${link.level?.label || '—'}</span>
+        <div class="link-evidence">${(link.evidence || []).join(' · ')}</div>
+        ${link.details?.death_years ? `<div class="link-evidence">${link.details.death_years}</div>` : ''}
+      </div>
+    </div>
+  `).join('');
+
+  const analysisHtml = data.analysis
+    ? `<div class="sanad-analysis">${renderMarkdown(data.analysis)}</div>` : '';
+
+  return `
+    <div class="sanad-result">
+      <div class="sanad-verdict ${vc}">
+        <div class="verdict-icon">${vi}</div>
+        <div class="verdict-text">${data.overall_verdict || 'غير محدد'}</div>
+        <div class="verdict-sub">${names.join(' ← ')}</div>
+      </div>
+      <div class="chain-links">${linksHtml}</div>
+      ${analysisHtml}
+    </div>`;
+}
+</script>
+</body>
+</html>
