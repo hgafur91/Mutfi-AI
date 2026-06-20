@@ -1,3 +1,9 @@
+// Environment variables
+process.env.SUPABASE_URL = 'https://oijuvcybqkpyfhmoruxk.supabase.co';
+process.env.SUPABASE_SERVICE_KEY = 'sb_secret_zyi3KJZEDEGTsR61VN_FCQ_TmOL1tVl';
+process.env.VOYAGE_API_KEY = 'pa-vRmwm3XsCN1UFMuTgh7KhuQ1zwYxSIm22lFXisJ74KC';
+process.env.ANTHROPIC_API_KEY = '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';
+
 /**
  * MUFTI AI — Backend Server
  * Handles: embedding, Claude analysis, sanad verification
@@ -228,3 +234,4 @@ app.post('/sanad', async (req, res) => {
 });
 
 app.listen(PORT, () => console.log(`MUFTI AI running on port ${PORT}`));
+
