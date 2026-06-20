@@ -98,7 +98,7 @@ app.post('/analyze', async (req, res) => {
   try {
     const { question, context } = req.body;
     const r = await claude.messages.create({
-      model: 'claude-sonnet-4-6', max_tokens: 1200, system: SYSTEM_PROMPT,
+      model: 'claude-3-5-sonnet-20241022', max_tokens: 1200, system: SYSTEM_PROMPT,
       messages: [{ role: 'user', content: `السؤال: ${question}\n\nالمعلومات من قاعدة البيانات:\n\n${context}\n\nحلل حال الراوي بناءً على هذه المصادر فقط.` }]
     });
     res.json({ answer: r.content[0].text });
@@ -124,7 +124,7 @@ app.post('/chat', async (req, res) => {
     ];
 
     const r = await claude.messages.create({
-      model: 'claude-sonnet-4-6', max_tokens: 1500, system: SYSTEM_PROMPT,
+      model: 'claude-3-5-sonnet-20241022', max_tokens: 1500, system: SYSTEM_PROMPT,
       messages: chatMessages
     });
     res.json({ answer: r.content[0].text, narrators });
@@ -180,7 +180,7 @@ app.post('/sanad', async (req, res) => {
 
     const chainText = links.map((l,i)=>`الحلقة ${i+1}: ${l.from} → ${l.to}\nالمستوى: ${l.level.label}\nالأدلة: ${l.evidence.join('؛ ')}`).join('\n\n');
     const aiRes = await claude.messages.create({
-      model:'claude-sonnet-4-6', max_tokens:800, system:SYSTEM_PROMPT,
+      model:'claude-3-5-sonnet-20241022', max_tokens:800, system:SYSTEM_PROMPT,
       messages:[{role:'user',content:`قيّم اتصال هذا السند:\n${narrators.join(' ← ')}\n\n${chainText}\n\nالحكم الأولي: ${verdict}\n\nأعطِ حكماً مختصراً مع بيان أضعف حلقة.`}]
     });
     res.json({ links, overall_verdict: verdict, analysis: aiRes.content[0].text, narrators: allResults });
