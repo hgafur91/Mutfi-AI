@@ -531,6 +531,37 @@ main {
   font-size: 1.05rem;
 }
 
+/* Chat */
+.chat-container {
+  background: white; border: 1.5px solid var(--border);
+  border-radius: 20px; overflow: hidden;
+  box-shadow: 0 4px 32px var(--shadow);
+  display: flex; flex-direction: column;
+  height: 70vh; min-height: 500px;
+}
+.chat-messages {
+  flex: 1; overflow-y: auto; padding: 24px;
+  display: flex; flex-direction: column; gap: 16px;
+}
+.chat-welcome { text-align: center; margin: auto; max-width: 400px; padding: 20px; }
+.chat-welcome-icon { font-size: 3rem; margin-bottom: 12px; }
+.chat-welcome-title { font-family: 'Amiri', serif; font-size: 1.4rem; color: var(--teal); margin-bottom: 10px; font-weight: 700; }
+.chat-welcome-text { font-size: 0.95rem; color: #777; line-height: 1.8; }
+.chat-msg { max-width: 85%; padding: 14px 18px; border-radius: 16px; font-size: 0.95rem; line-height: 1.8; white-space: pre-wrap; }
+.chat-msg.user { background: var(--teal); color: white; align-self: flex-start; border-bottom-right-radius: 4px; }
+.chat-msg.ai { background: var(--parchment2); color: var(--ink); align-self: flex-end; border-bottom-left-radius: 4px; }
+.chat-msg.ai h2, .chat-msg.ai h3 { font-family: 'Amiri', serif; color: var(--teal); margin: 10px 0 6px; }
+.chat-msg.ai strong { color: var(--rust); }
+.chat-msg.ai table { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 0.85rem; }
+.chat-msg.ai th, .chat-msg.ai td { border: 1px solid var(--border); padding: 6px 10px; text-align: right; }
+.chat-typing { align-self: flex-end; padding: 14px 18px; color: var(--teal); font-style: italic; }
+.chat-input-wrap { display: flex; gap: 10px; padding: 16px; border-top: 1px solid var(--parchment2); background: var(--parchment); }
+.chat-input { flex: 1; padding: 12px 16px; border: 1.5px solid var(--border); border-radius: 12px; font-family: 'Tajawal', sans-serif; font-size: 1rem; direction: rtl; resize: none; outline: none; max-height: 120px; }
+.chat-input:focus { border-color: var(--gold); }
+.chat-send { background: var(--teal); color: white; border: none; border-radius: 12px; padding: 12px 22px; font-family: 'Tajawal', sans-serif; font-weight: 600; cursor: pointer; white-space: nowrap; }
+.chat-send:hover { background: var(--teal-light); }
+.chat-send:disabled { opacity: 0.5; }
+
 /* Footer */
 footer {
   position: relative; z-index: 1;
@@ -569,6 +600,9 @@ footer span { color: var(--gold); }
     </button>
     <button class="mode-tab" onclick="switchMode('sanad')" id="tab-sanad">
       <span class="tab-icon">⛓</span> تحقق من السند
+    </button>
+    <button class="mode-tab" onclick="switchMode('chat')" id="tab-chat">
+      <span class="tab-icon">💬</span> محادثة
     </button>
   </div>
 
@@ -626,6 +660,25 @@ footer span { color: var(--gold); }
 
     <div class="results" id="sanad-results"></div>
   </div>
+
+  <!-- Panel: Chat -->
+  <div class="panel" id="panel-chat">
+    <div class="chat-container">
+      <div class="chat-messages" id="chat-messages">
+        <div class="chat-welcome">
+          <div class="chat-welcome-icon">💬</div>
+          <div class="chat-welcome-title">محادثة مع مفتي AI</div>
+          <div class="chat-welcome-text">اسأل عن أي راوٍ، ناقش حال إسناد، أو استفسر عن أقوال الأئمة في الجرح والتعديل. أستند فقط إلى الكتب الإثني عشر المحمّلة.</div>
+        </div>
+      </div>
+      <div class="chat-input-wrap">
+        <textarea class="chat-input" id="chat-input" rows="1"
+          placeholder="اكتب سؤالك عن الرجال..."
+          onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChat();}"></textarea>
+        <button class="chat-send" id="chat-send" onclick="sendChat()">إرسال ←</button>
+      </div>
+    </div>
+  </div>
 </main>
 
 <footer>
@@ -637,7 +690,7 @@ footer span { color: var(--gold); }
 // ── Config — REPLACE WITH YOUR VALUES ──────────────────────────────────────
 const SUPABASE_URL        = 'https://oijuvcybqkpyfhmoruxk.supabase.co';
 const SUPABASE_ANON_KEY   = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9panV2Y3licWtweWZobW9ydXhrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA3MDM4MDcsImV4cCI6MjA5NjI3OTgwN30.NzUWphMlrOERIjwY8aJuC5SKSfel4sQ4eS1dQhVKg9w';
-const ANTHROPIC_PROXY_URL = 'https://mutfi-ai.onrender.com';
+const ANTHROPIC_PROXY_URL = '';
 // Fill ANTHROPIC_PROXY_URL after Railway deployment
 // ────────────────────────────────────────────────────────────────────────────
 
@@ -799,8 +852,12 @@ async function searchNarrator() {
   results.innerHTML = '';
 
   try {
-    const embedding = await getEmbedding(query);
-    const narrators = await searchSupabase(embedding, 5);
+    const sres = await fetch(`${ANTHROPIC_PROXY_URL}/search`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ query })
+    });
+    const sdata = await sres.json();
+    const narrators = sdata.narrators;
 
     if (!narrators || !narrators.length) {
       results.innerHTML = '<div class="error-box">لم يُعثر على رواة مطابقين</div>';
@@ -917,6 +974,73 @@ function renderSanadResult(data, names) {
       ${analysisHtml}
     </div>`;
 }
+
+// ── CHAT ──
+let chatHistory = [];
+
+async function sendChat() {
+  const input = document.getElementById('chat-input');
+  const text = input.value.trim();
+  if (!text) return;
+
+  const msgsEl = document.getElementById('chat-messages');
+  const welcome = msgsEl.querySelector('.chat-welcome');
+  if (welcome) welcome.remove();
+
+  // Add user message
+  const userMsg = document.createElement('div');
+  userMsg.className = 'chat-msg user';
+  userMsg.textContent = text;
+  msgsEl.appendChild(userMsg);
+
+  input.value = '';
+  chatHistory.push({ role: 'user', content: text });
+
+  // Typing indicator
+  const typing = document.createElement('div');
+  typing.className = 'chat-typing';
+  typing.textContent = 'مفتي AI يكتب...';
+  msgsEl.appendChild(typing);
+  msgsEl.scrollTop = msgsEl.scrollHeight;
+
+  const sendBtn = document.getElementById('chat-send');
+  sendBtn.disabled = true;
+
+  try {
+    const res = await fetch(`${ANTHROPIC_PROXY_URL}/chat`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ messages: chatHistory })
+    });
+    const data = await res.json();
+    typing.remove();
+
+    const aiMsg = document.createElement('div');
+    aiMsg.className = 'chat-msg ai';
+    aiMsg.innerHTML = renderMarkdown(data.answer);
+    msgsEl.appendChild(aiMsg);
+
+    chatHistory.push({ role: 'assistant', content: data.answer });
+    msgsEl.scrollTop = msgsEl.scrollHeight;
+  } catch (err) {
+    typing.remove();
+    const errMsg = document.createElement('div');
+    errMsg.className = 'chat-msg ai';
+    errMsg.textContent = 'خطأ: ' + err.message;
+    msgsEl.appendChild(errMsg);
+  } finally {
+    sendBtn.disabled = false;
+  }
+}
+
+// Auto-grow textarea
+document.addEventListener('DOMContentLoaded', () => {
+  const ci = document.getElementById('chat-input');
+  if (ci) ci.addEventListener('input', function() {
+    this.style.height = 'auto';
+    this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+  });
+});
+
 </script>
 </body>
 </html>
