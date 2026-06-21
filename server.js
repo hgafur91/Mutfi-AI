@@ -6,7 +6,7 @@
 process.env.SUPABASE_URL = 'https://ucxkmzwrwbrqsxucbxtb.supabase.co';
 process.env.SUPABASE_SERVICE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVjeGttendyd2JycXN4dWNieHRiIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4MTk3MjA3MCwiZXhwIjoyMDk3NTQ4MDcwfQ.xw9liA1ODmCj6HSQBvSV_Q1TGpYaSy2gSwg7QeVQMDc';
 process.env.VOYAGE_API_KEY = 'pa-vRmwm3XsCN1UFMuTgh7KhuQ1zwYxSIm22lFXisJ74KC';
-process.env.ANTHROPIC_API_KEY = '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';
+process.env.ANTHROPIC_API_KEY = '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';
 
 import express from 'express';
 import cors from 'cors';
